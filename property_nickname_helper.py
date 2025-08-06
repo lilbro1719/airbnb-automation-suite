@@ -45,6 +45,9 @@ class PropertyNicknameHelper:
     
     def get_nickname(self, airbnb_name):
         """Get nickname for Airbnb property name"""
+        if not airbnb_name:
+            return None
+            
         # Try exact match first
         if airbnb_name in self.nicknames:
             return self.nicknames[airbnb_name]
@@ -52,11 +55,36 @@ class PropertyNicknameHelper:
         # Try partial matches (in case of slight differences)
         airbnb_lower = airbnb_name.lower()
         for full_name, nickname in self.nicknames.items():
-            if airbnb_lower in full_name.lower() or full_name.lower() in airbnb_lower:
+            # Check if key parts match
+            if self._matches_property(airbnb_lower, full_name.lower()):
                 return nickname
         
-        # Fallback: return first 15 chars of original name
-        return airbnb_name[:15]
+        # No match found
+        return None
+    
+    def _matches_property(self, search_name, stored_name):
+        """Check if property names match based on key words"""
+        # Key identifying words
+        search_words = set(search_name.split())
+        stored_words = set(stored_name.split())
+        
+        # Property-specific identifiers
+        key_words = {'bed', 'bath', 'serene', 'dream', 'bamboo', 'buddha', 'jungle', 
+                    'japanese', 'rice', 'terrace', 'villa', 'newly', 'built', 'private',
+                    'paddy', 'paradise', 'secret', 'bali', 'getaway', 'tranquil'}
+        
+        search_key = search_words & key_words
+        stored_key = stored_words & key_words
+        
+        # Need at least 2 matching key words or exact substring match
+        if len(search_key & stored_key) >= 2:
+            return True
+        
+        # Check substring matches
+        if search_name in stored_name or stored_name in search_name:
+            return True
+            
+        return False
     
     def get_all_nicknames(self):
         """Get all nickname mappings"""

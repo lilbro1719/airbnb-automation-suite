@@ -42,7 +42,7 @@ git commit -m "Initial commit: Airbnb automation suite
 
 ### 4. Connect to GitHub and Push:
 ```bash
-git remote add origin https://github.com/[YOUR_USERNAME]/airbnb-automation-suite.git
+git remote add origin https://github.com/lilbro1719/airbnb-automation-suite.git
 git branch -M main
 git push -u origin main
 ```
